@@ -25,7 +25,7 @@ npm start
 e.g. CloudFoundry
 
 ```
-cf push BackEnd
+cf push SimpleSOcial
 ```
 
 ### Try It

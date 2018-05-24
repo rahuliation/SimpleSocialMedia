@@ -1,12 +1,12 @@
 swagger: "2.0"
 info:
   version: 1.0.0
-  title: BackEnd
+  title: Simple Social
   description: SimpleSocial
 basePath: /api/v1
 tags:
-  - name: Examples
-    description: Simple example endpoints
+  - name: Users
+    description: Simple User endpoints
 
 consumes:
   - application/json
@@ -14,7 +14,7 @@ produces:
   - application/json
 
 definitions:
-  ExampleBody:
+  UserBody:
     type: object
     title: example
     required:
@@ -25,25 +25,25 @@ definitions:
         description: The example name
 
 paths:
-  /examples:
+  /users:
     get:
       tags:
-        - Examples
-      description: Fetch all examples
+        - Users
+      description: Fetch all Users
       responses:
         200:
-          description: Returns all examples
+          description: Returns all Useers
     post:
       tags:
-        - Examples
-      description: Create a new example
+        - Users
+      description: Create a new Users
       parameters:
         - name: body
           in: body
           description: number of items to skip
           required: true
           schema: 
-            $ref: "#/definitions/ExampleBody"
+            $ref: "#/definitions/UserBody"
       responses:
         200:
           description: Returns all examples
@@ -51,7 +51,7 @@ paths:
   /examples/{id}:
     get:
       tags:
-        - Examples
+        - Users
       parameters:
         - name: id
           in: path

@@ -5,4 +5,5 @@ import routes from './routes';
 const port = parseInt(process.env.PORT);
 export default new Server()
   .router(routes)
+  .dbConnection()
   .listen(port);
