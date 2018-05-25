@@ -16,13 +16,41 @@ produces:
 definitions:
   UserBody:
     type: object
-    title: example
+    title: users
     required:
       - name
+      - username
+      - password
+      - email
+
     properties:
       name:
         type: string
-        description: The example name
+        description:  name of the user
+      username:
+        type: string
+        description: username of user
+      password:
+        type: string
+        description: Password for login
+      email:
+        type: string
+        description: Email of Users
+  GetToken:
+    type: object
+    title: get Token
+    required:
+      - username
+      - password
+
+    properties:
+      username:
+        type: string
+        description: username of user
+      password:
+        type: string
+        description: Password for login
+     
 
 paths:
   /users:
@@ -48,7 +76,7 @@ paths:
         200:
           description: Returns all examples
 
-  /examples/{id}:
+  /users/{id}:
     get:
       tags:
         - Users
@@ -57,7 +85,23 @@ paths:
           in: path
           required: true
           description: The id of the entity to retrieve
-          type: integer
+          type: string
+      responses:
+        200:
+          description: Return the example with the specified id
+        404:
+          description: Example not 
+  /users/gettoken:
+    post:
+      tags:
+        - Users
+      parameters:
+        - name: body
+          in: body
+          description: number of items to skip
+          required: true
+          schema: 
+            $ref: "#/definitions/GetToken"
       responses:
         200:
           description: Return the example with the specified id

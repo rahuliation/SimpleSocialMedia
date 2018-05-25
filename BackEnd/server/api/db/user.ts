@@ -7,9 +7,11 @@ export let Mixed = mongoose.Schema.Types.Mixed;
 export interface UserModelI extends mongoose.Document {
     name: string;
     username: string;
+    email: string;
     password: string;
     createdAt: Date;
     modifiedAt: Date;
+    comparePassword: (candidatePassword: string , cb: (err: any , isMatch: boolean) => void) => void;
 }
 
 let UserSchema = new Schema({
@@ -18,6 +20,10 @@ let UserSchema = new Schema({
         required: true
     },
     username: {
+        type: String,
+        required: true
+    },
+    email: {
         type: String,
         required: true
     },
@@ -33,27 +39,24 @@ let UserSchema = new Schema({
         type: Date,
         required: false
     }
-}).pre('save', function <UserModelI>(next) {
+},
+    {
+        timestamps: {
+            createdAt: 'created_at',
+            updatedAt: 'updated_at'
+        }
 
-    let now = new Date();
-    if (!this.createdAt) {
-        this.createdAt = now;
-    }
-    this.modifiedAt = now;
-
-    next();
-    return this;
-});
+    });
 
 
-UserSchema.pre('save', function<UserModelI>(next) {
+UserSchema.pre('save', function <UserModelI>(next) {
     var user = this;
     if (!user.isModified('password')) return next();
 
-    bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.genSalt(10, function (err, salt) {
         if (err) return next(err);
 
-        bcrypt.hash(user.password, salt, function(err, hash) {
+        bcrypt.hash(user.password, salt, function (err, hash) {
             if (err) return next(err);
 
             // override the cleartext password with the hashed one
@@ -63,11 +66,11 @@ UserSchema.pre('save', function<UserModelI>(next) {
     });
 });
 
-UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+UserSchema.methods.comparePassword = function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
         if (err) return cb(err);
         cb(null, isMatch);
     });
 };
 
-export let User = mongoose.model<UserModelI>('hero', UserSchema, 'heroes', true);
+export let User = mongoose.model<UserModelI>('user', UserSchema, 'users', true);

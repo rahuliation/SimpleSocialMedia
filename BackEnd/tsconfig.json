@@ -5,7 +5,7 @@
     "module": "commonjs",
     "sourceMap": true,
     "typeRoots": ["node_modules/@types"],
-    "baseUrl": "./server"
+    "baseUrl": "."
   },
   "include": ["typings.d.ts", "server/**/*.ts"],
   "exclude": ["node_modules"]

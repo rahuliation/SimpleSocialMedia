@@ -3,10 +3,10 @@ import { expect } from 'chai';
 import * as request from 'supertest';
 import Server from '../server';
 
-describe('Examples', () => {
-  it('should get all examples', () =>
+describe('users', () => {
+  it('should get all users', () =>
     request(Server)
-      .get('/api/v1/examples')
+      .get('/api/v1/users')
       .expect('Content-Type', /json/)
       .then(r => {
         expect(r.body)
@@ -14,26 +14,31 @@ describe('Examples', () => {
           .of.length(2);
       }));
 
-  it('should add a new example', () =>
+  it('should add a new users', () =>
     request(Server)
-      .post('/api/v1/examples')
-      .send({ name: 'test' })
+      .post('/api/v1/users')
+      .send({
+        name: 'Rahul Barua',
+        username: 'rahul',
+        email: 'rahuliation@gmail.com',
+        password: '123'
+      })
       .expect('Content-Type', /json/)
       .then(r => {
         expect(r.body)
           .to.be.an('object')
           .that.has.property('name')
-          .equal('test');
+          .equal('Rahul Barua');
       }));
 
   it('should get an example by id', () =>
     request(Server)
-      .get('/api/v1/examples/2')
+      .get('/api/v1/users/5b07c701724ba712d07289ca')
       .expect('Content-Type', /json/)
       .then(r => {
         expect(r.body)
           .to.be.an('object')
           .that.has.property('name')
-          .equal('test');
+          .equal('Rahul Barua');
       }));
 });
