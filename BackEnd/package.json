@@ -4,9 +4,9 @@
   "description": "SimpleSocial",
   "main": "index.js",
   "scripts": {
-    "start": "cd build && node main",
-    "compile": "node build.js && backpack build",
-    "dev": "node build.js && backpack dev | pino -o 'short'",
+    "prod": "cd build && node main",
+    "build": "node build.js && backpack build",
+    "start": "node build.js && backpack dev | pino -o 'short'",
     "test": "node build.js && mocha test/**/*.ts --exit"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "swagger-express-middleware": "^1.0.0-alpha.12"
   },
   "devDependencies": {
+    "@types/bcrypt": "^2.0.0",
     "@types/bluebird": "^3.5.20",
     "@types/chai": "^4.1.2",
     "@types/express": "^4.0.35",
