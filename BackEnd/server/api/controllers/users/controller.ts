@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import UserService from '../../services/user.service';
 import { Request, Response } from 'express';
 import { getURL } from '../../../common/myutils';
@@ -7,13 +8,16 @@ export class Controller {
 
     UserService.all()
     .then(r => res
-      .status(201)
-      .json(r.map(( {id, name, username, email}) =>({
-        id,
-        name,
-        username,
-        email,
-        link: getURL(req, `/api/v1/users/${id}` )
+      .status(200)
+      .json(r.map(( val) =>({
+        ...pick(val,[
+          'id',
+          'name',
+          'username',
+          'email'
+        ])
+       ,
+        link: getURL(req, `/api/v1/users/${val.id}` )
       }))),
     ).catch(err =>
       res
@@ -50,9 +54,16 @@ export class Controller {
 
     UserService.create(req.body).then(r =>
       res
-        .status(201)
+        .status(200)
         .location(`/api/v1/users/${r.id}`)
-        .json(r),
+        .json( {
+          ...pick(r,[
+            'id',
+            'name',
+            'username',
+            'email'
+          ])
+        }),
     ).catch(err =>
       res
         .status(400)
