@@ -12,20 +12,32 @@ const styles: StyleRulesCallback = (theme: any) => ({
   }
 });
 interface PaswordInputExternalProps {
+  error?: boolean;
+  onChange?: (e: any) => void;
+  value?: string | null;
   label: string;
 }
-  
+
 interface PaswordInputInternalProps extends PaswordInputExternalProps {
   classes: any;
   showPassword: boolean;
   setShowPassword: (showPassword: boolean) => void;
 }
 
-const PaswordInputComponent = ({ label , classes, showPassword, setShowPassword }: PaswordInputInternalProps) => (
+const PaswordInputComponent = ({ label,
+  classes,
+  showPassword,
+  setShowPassword,
+  value,
+  error,
+  onChange }: PaswordInputInternalProps) => (
     <FormControl className={classes.input} fullWidth={true}>
       <InputLabel >{label}</InputLabel>
       <Input
+        error={error!}
+        onChange={(e) => onChange ? onChange(e) : undefined}
         type={showPassword ? 'text' : 'password'}
+        value={value!}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
@@ -38,7 +50,7 @@ const PaswordInputComponent = ({ label , classes, showPassword, setShowPassword 
         }
       />
     </FormControl>
-);
+  );
 const enhance = compose<PaswordInputInternalProps, PaswordInputExternalProps>(
   withState('showPassword', 'setShowPassword', false),
   withStyles(styles)

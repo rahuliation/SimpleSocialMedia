@@ -6,6 +6,8 @@ import { compose, withState } from 'recompose';
 import { LoginForm } from '../components/Login/LoginForm';
 import { Tabs, Tab } from '@material-ui/core';
 import { RegistrationForm } from 'components/Login/Registration';
+import { inject } from 'mobx-react';
+import { Store } from 'models/Store';
 
 const styles: StyleRulesCallback = (theme: any) => ({
   root: {
@@ -19,13 +21,16 @@ const styles: StyleRulesCallback = (theme: any) => ({
   },
 });
 
-interface PropsWithStyles {
+interface LoginPageInternalProps {
+  store: typeof Store.Type;
+  message: string;
+  setMessage: (message: string) => void;
   classes: any;
   loginTab: number;
   setLoginTab: (loginTab: number) => void;
 }
 
-const LoginComponent = ({ classes, loginTab, setLoginTab }: PropsWithStyles) => (
+const LoginComponent = ({ classes, store , loginTab, setLoginTab, message, setMessage }: LoginPageInternalProps) => (
   <Grid container={true} className={classes.root}>
     <Grid item={true} md={12} >
       <Grid
@@ -34,7 +39,8 @@ const LoginComponent = ({ classes, loginTab, setLoginTab }: PropsWithStyles) => 
         className={classes.login}
         justify="center"
       >
-        <Paper style={{width: '500px'}} className={classes.paper}>
+        <Paper style={{ width: '500px' }} className={classes.paper}>
+           {message}
           <Tabs
             value={loginTab}
             onChange={(e, val) => setLoginTab(val)}
@@ -42,17 +48,28 @@ const LoginComponent = ({ classes, loginTab, setLoginTab }: PropsWithStyles) => 
             indicatorColor="secondary"
             textColor="secondary"
           >
-            <Tab  label="LOGIN" />
-            <Tab  label="REGISTRATION" />
+            <Tab label="LOGIN" />
+            <Tab label="REGISTRATION" />
           </Tabs>
-          {loginTab === 0 && <LoginForm />}
-          {loginTab === 1 && <RegistrationForm />}
+          {loginTab === 0 && <LoginForm 
+           currentUser={store.userStore.currentUser} 
+           onLogin={() => setLoginTab(0)} 
+          />}
+          {loginTab === 1 && <RegistrationForm 
+            currentUser={store.userStore.currentUser} 
+            onSave={() => {
+              setLoginTab(0);
+              setMessage('Successfully Registered');
+            }} 
+          />}
         </Paper>
       </Grid>
     </Grid>
   </Grid>
 );
-const enhance = compose<PropsWithStyles, {}>(
+const enhance = compose<LoginPageInternalProps, {}>(
+  inject('store'),
+  withState('message', 'setMessage', ''),
   withState('loginTab', 'setLoginTab', 0),
   withStyles(styles)
 
