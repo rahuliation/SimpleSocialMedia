@@ -8,6 +8,7 @@ export interface UserModelI extends mongoose.Document {
     name: string;
     username: string;
     email: string;
+    image: string;
     password: string;
     createdAt: Date;
     modifiedAt: Date;
@@ -30,6 +31,10 @@ let UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    image: {
+        type: String,
+        required: false
     },
     createdAt: {
         type: Date,

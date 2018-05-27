@@ -52,7 +52,7 @@ export class Controller {
 
   create(req: Request, res: Response): void {
 
-    UserService.create(req.body).then(r =>
+    UserService.create(req).then(r =>
       res
         .status(200)
         .location(`/api/v1/users/${r.id}`)
@@ -61,13 +61,14 @@ export class Controller {
             'id',
             'name',
             'username',
-            'email'
+            'email',
+            'image'
           ])
         }),
     ).catch(err =>
       res
         .status(400)
-        .json({error: 'something went wrong'}),
+        .json({error: err}),
     );
   }
 }

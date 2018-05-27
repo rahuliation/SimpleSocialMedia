@@ -1,7 +1,7 @@
 import  * as  jwt  from 'jsonwebtoken';
 import { User, UserModelI } from './../db/user';
 import L from '../../common/logger';
-
+import { fileUpload, getURL } from '../../common/myutils';
 export class UserService {
   all(): Promise<UserModelI[]> {
     return User.find({}).exec();
@@ -26,15 +26,16 @@ export class UserService {
           reject('Password Didnt match')
         }
       });
-
-     
-
     });
   }
 
-  create(elm): Promise<UserModelI> {
-
-    return new User(elm).save();
+  create(req): Promise<UserModelI> {
+    let { name , username, email, password, image} = req.body;
+    return  fileUpload(image, '/storage', username )
+    .then((path: string) => {
+    
+      return new User({name, username, email , password, image:  getURL(req, path.replace('public','')) }).save()
+    });
   }
 }
 

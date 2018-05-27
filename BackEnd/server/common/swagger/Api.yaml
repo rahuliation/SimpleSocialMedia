@@ -36,6 +36,9 @@ definitions:
       email:
         type: string
         description: Email of Users
+      image:
+        type: string
+        description: image of user
   GetToken:
     type: object
     title: get Token

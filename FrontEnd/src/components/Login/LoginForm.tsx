@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback } from '@material-ui/core/styles';
-import { compose } from 'recompose';
+import { compose, withHandlers } from 'recompose';
 import { FormControl, InputLabel, Input, Button } from '@material-ui/core';
 import { PasswordInput } from 'common/PasswordInput';
 import { User } from 'models/User';
+import { observer } from 'mobx-react';
 
 const styles: StyleRulesCallback = (theme: any) => ({
   input: {
@@ -17,20 +18,20 @@ interface LoginFormExternalProps {
 }
 
 interface LoginFormInternalProps extends LoginFormExternalProps {
-  save: () => void;
+  login: () => void;
   classes: any;
   showPassword: boolean;
   setShowPassword: (showPassword: boolean) => void;
 }
 
-const LoginFormComponent = ({ classes, currentUser, showPassword, setShowPassword }: LoginFormInternalProps) => (
+const LoginFormComponent = ({ classes, currentUser, showPassword, setShowPassword, login }: LoginFormInternalProps) => 
+(
   <div>
     <FormControl className={classes.input} fullWidth={true}>
       <InputLabel htmlFor="username">UserName</InputLabel>
       <Input
         value={currentUser.username}
         onChange={(e) => currentUser.setUsername(e.target.value)}
-        id="username"
         type="text"
       />
     </FormControl>
@@ -40,13 +41,28 @@ const LoginFormComponent = ({ classes, currentUser, showPassword, setShowPasswor
       label="Password"
     />
     <br />
-    <Button variant="raised" size="large" color="primary" fullWidth={true}>
+    <Button
+      disabled={currentUser.loginValidatie === false}
+      variant="raised"
+      size="large"
+      color="primary"
+      fullWidth={true}
+      onClick={(e) => login()}
+    >
       Login
     </Button>
   </div>
 );
 const enhance = compose<LoginFormInternalProps, LoginFormExternalProps>(
-  withStyles(styles)
+  withStyles(styles),
+  withHandlers<LoginFormInternalProps, {}>({
+    login: ({ currentUser, onLogin}) => () => {
+      if (currentUser.login() && onLogin) {
+        onLogin();
+      } 
+    }
+  }),
+  observer
 );
 
 export const LoginForm = enhance(LoginFormComponent);

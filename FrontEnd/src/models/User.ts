@@ -3,20 +3,30 @@ import { isEmpty, pick, isEqual } from 'lodash';
 import { types, flow, getSnapshot, applySnapshot } from 'mobx-state-tree';
 import axios from 'axios';
 import { isEmail } from 'validator';
+import { fileToBase64 } from 'utils';
 
 export const User = types.model('users', {
     _id: types.maybe(types.identifier(types.string)),
     name: types.optional(types.string, ''),
     username: types.optional(types.string, ''),
     email: types.optional(types.string, ''),
+    image: types.optional(types.string, ''),
     access_token: types.maybe(types.string)
 }).volatile((self): {
     password: null | string,
-    repeatPassword: null | string
+    repeatPassword: null | string,
+    base64Image: null | string
 } => ({
     password: null,
-    repeatPassword: null
+    repeatPassword: null,
+    base64Image: null
 } )).views((self) => ({
+    get authenticated() {
+       if ( isEmpty(self.access_token)) {
+           return false;
+       }
+       return true;
+    },
     get CreateValidate() {
         return isEmpty(self.name) === false
             && isEmpty(self.username) === false
@@ -30,10 +40,22 @@ export const User = types.model('users', {
         return isEmpty(self.name) === false
             && isEmpty(self.username) === false
             && isEmpty(self.email) === false;
+    },
+    get loginValidatie() {
+        return isEmpty(self.username) === false
+            && isEmpty(self.password) === false;
     }
 })).actions((self) => ({
+    reset() {
+        self.password = null;
+        self.base64Image = null;
+        self.repeatPassword = null;
+    },
     setName(name: string) {
         self.name = name;
+    },
+    setToken(token: string) {
+        self.access_token = token;
     },
     setPassword(password: string) {
         self.password = password;
@@ -48,7 +70,32 @@ export const User = types.model('users', {
         self.username = username.toLowerCase().replace(/\s/g, '');
     }
 })).actions((self) => {
+    const setBase64Image = flow(function * (image: any) {
+            self.base64Image = yield fileToBase64(image[0]);
+     });
+     const login = flow(function* () {
+         if (self.loginValidatie === false) {
+            return false;
+         }
+         try {
+            var res = yield axios({
+                method: Apis.LOGIN.method,
+                url: Apis.LOGIN.url,
+                data: {
+                    username: self.username,
+                    password: self.password
+                }
+            });
+        } catch (e) {
+            // tslint:disable-next-line:no-console
+            console.log(e);
+        }
+        if (res.status && res.status !== 200) {
+            return false;
+          }
+        self.setToken(res.data.token);
 
+     });
     const save = flow(function* () {
         if (self._id === null && self.CreateValidate === false) {
             return false;
@@ -62,6 +109,7 @@ export const User = types.model('users', {
                 url: Apis.SIGNUP.url,
                 data: {
                     ...pick(getSnapshot(self), ['name', 'username', 'email']),
+                    image: self.base64Image,
                     password: self.password
                 }
             });
@@ -69,18 +117,15 @@ export const User = types.model('users', {
             // tslint:disable-next-line:no-console
             console.log(e);
         }
-        if (res.status !== 200) {
+        if (res.status && res.status !== 200) {
           return false;
         }
-        self.setPassword('');
-        self.setRepeatPassword('');
+        self.reset();
         applySnapshot(self, res.data);
-        
-        // tslint:disable-next-line:no-console
-        console.log('success');
+       
         return true;
     });
-    return { save };
+    return { save, setBase64Image, login };
 });
 
 export const UserStore = types.model('users', {

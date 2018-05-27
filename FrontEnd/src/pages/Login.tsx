@@ -72,7 +72,6 @@ const enhance = compose<LoginPageInternalProps, {}>(
   withState('message', 'setMessage', ''),
   withState('loginTab', 'setLoginTab', 0),
   withStyles(styles)
-
 );
 
 export const Login = enhance(LoginComponent);

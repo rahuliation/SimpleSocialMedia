@@ -1,5 +1,5 @@
 Arguments: 
-  /home/rahul/.nvm/versions/node/v9.3.0/bin/node /home/rahul/.nvm/versions/node/v9.3.0/bin/yarn start
+  /home/rahul/.nvm/versions/node/v9.3.0/bin/node /home/rahul/.nvm/versions/node/v9.3.0/bin/yarn stast
 
 PATH: 
   /home/rahul/.nvm/versions/node/v9.3.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/sbin:/usr/sbin:/home/rahul/.config/composer/vendor/bin
@@ -26,6 +26,7 @@ npm manifest:
       "test": "node build.js && mocha test/**/*.ts --exit"
     },
     "dependencies": {
+      "base64-img": "^1.0.4",
       "bcrypt": "^2.0.1",
       "bluebird": "^3.5.0",
       "body-parser": "^1.18.2",
@@ -113,7 +114,7 @@ Lockfile:
       "@types/events" "*"
       "@types/node" "*"
   
-  "@types/express@^4.0.35":
+  "@types/express@^4.11.1":
     version "4.11.1"
     resolved "https://registry.yarnpkg.com/@types/express/-/express-4.11.1.tgz#f99663b3ab32d04cb11db612ef5dd7933f75465b"
     dependencies:
@@ -126,6 +127,10 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@types/jsonwebtoken/-/jsonwebtoken-7.2.7.tgz#5dd62e0c0a0c6f211c3c1d13d322360894625b47"
     dependencies:
       "@types/node" "*"
+  
+  "@types/lodash@^4.14.109":
+    version "4.14.109"
+    resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.109.tgz#b1c4442239730bf35cabaf493c772b18c045886d"
   
   "@types/mime@*":
     version "2.0.0"
@@ -201,6 +206,13 @@ Lockfile:
   acorn@^5.0.0:
     version "5.5.3"
     resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.5.3.tgz#f473dd47e0277a08e28e9bec5aeeb04751f0b8c9"
+  
+  ajax-request@^1.2.0:
+    version "1.2.3"
+    resolved "https://registry.yarnpkg.com/ajax-request/-/ajax-request-1.2.3.tgz#99fcbec1d6d2792f85fa949535332bd14f5f3790"
+    dependencies:
+      file-system "^2.1.1"
+      utils-extend "^1.0.7"
   
   ajv-keywords@^3.1.0:
     version "3.2.0"
@@ -880,6 +892,13 @@ Lockfile:
   balanced-match@^1.0.0:
     version "1.0.0"
     resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
+  
+  base64-img@^1.0.4:
+    version "1.0.4"
+    resolved "https://registry.yarnpkg.com/base64-img/-/base64-img-1.0.4.tgz#3e22d55d6c74a24553d840d2b1bc12a7db078d35"
+    dependencies:
+      ajax-request "^1.2.0"
+      file-system "^2.1.0"
   
   base64-js@^1.0.2:
     version "1.3.0"
@@ -1854,6 +1873,19 @@ Lockfile:
   fast-safe-stringify@^1.0.8, fast-safe-stringify@^1.2.3:
     version "1.2.3"
     resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-1.2.3.tgz#9fe22c37fb2f7f86f06b8f004377dbf8f1ee7bc1"
+  
+  file-match@^1.0.1:
+    version "1.0.2"
+    resolved "https://registry.yarnpkg.com/file-match/-/file-match-1.0.2.tgz#c9cad265d2c8adf3a81475b0df475859069faef7"
+    dependencies:
+      utils-extend "^1.0.6"
+  
+  file-system@^2.1.0, file-system@^2.1.1:
+    version "2.2.2"
+    resolved "https://registry.yarnpkg.com/file-system/-/file-system-2.2.2.tgz#7d65833e3a2347dcd956a813c677153ed3edd987"
+    dependencies:
+      file-match "^1.0.1"
+      utils-extend "^1.0.4"
   
   fill-range@^4.0.0:
     version "4.0.0"
@@ -4289,6 +4321,10 @@ Lockfile:
     dependencies:
       inherits "2.0.1"
   
+  utils-extend@^1.0.4, utils-extend@^1.0.6, utils-extend@^1.0.7:
+    version "1.0.8"
+    resolved "https://registry.yarnpkg.com/utils-extend/-/utils-extend-1.0.8.tgz#ccfd7b64540f8e90ee21eec57769d0651cab8a5f"
+  
   utils-merge@1.0.1:
     version "1.0.1"
     resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
@@ -4483,16 +4519,14 @@ Lockfile:
       commander "^2.7.1"
 
 Trace: 
-  Error: Command failed.
-  Exit code: 1
-  Command: sh
-  Arguments: -c node build.js && backpack dev | pino -o 'short'
-  Directory: /home/rahul/PhpstormProjects/SimpleSocial/BackEnd
-  Output:
-  
-      at ProcessTermError.MessageError (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:186:110)
-      at new ProcessTermError (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:226:113)
-      at ChildProcess.<anonymous> (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:30281:17)
-      at ChildProcess.emit (events.js:159:13)
-      at maybeClose (internal/child_process.js:943:16)
-      at Process.ChildProcess._handle.onexit (internal/child_process.js:220:5)
+  Error: Command "stast" not found. Did you mean "start"?
+      at new MessageError (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:186:110)
+      at /home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:87307:17
+      at Generator.next (<anonymous>)
+      at step (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:98:30)
+      at /home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:116:14
+      at new Promise (<anonymous>)
+      at new F (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:23451:28)
+      at /home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:95:12
+      at runCommand (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:87312:22)
+      at Object.<anonymous> (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:87412:14)
