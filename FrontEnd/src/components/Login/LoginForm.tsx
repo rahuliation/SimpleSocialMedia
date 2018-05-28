@@ -5,6 +5,7 @@ import { FormControl, InputLabel, Input, Button } from '@material-ui/core';
 import { PasswordInput } from 'common/PasswordInput';
 import { User } from 'models/User';
 import { observer } from 'mobx-react';
+import { Redirect } from 'react-router-dom';
 
 const styles: StyleRulesCallback = (theme: any) => ({
   input: {
@@ -25,43 +26,51 @@ interface LoginFormInternalProps extends LoginFormExternalProps {
   location: any;
 }
 
-const LoginFormComponent = ({ classes, currentUser, showPassword, 
-  setShowPassword, login, location }: LoginFormInternalProps) => 
-(
-  <div>
-    <FormControl className={classes.input} fullWidth={true}>
-      <InputLabel htmlFor="username">UserName</InputLabel>
-      <Input
-        value={currentUser.username}
-        onChange={(e) => currentUser.setUsername(e.target.value)}
-        type="text"
+const LoginFormComponent = ({ classes, currentUser, showPassword,
+  setShowPassword, login, location }: LoginFormInternalProps) =>
+  currentUser.authenticated === true ?
+    (
+      <Redirect
+        to={{
+          pathname: '/home',
+        }}
       />
-    </FormControl>
-    <PasswordInput
-      value={currentUser.password}
-      onChange={(e) => currentUser.setPassword(e.target.value)}
-      label="Password"
-    />
-    <br />
-    <Button
-      disabled={currentUser.loginValidatie === false}
-      variant="raised"
-      size="large"
-      color="primary"
-      fullWidth={true}
-      onClick={(e) => login()}
-    >
-      Login
-    </Button>
-  </div>
-);
+    ) :
+    (
+      <div>
+        <FormControl className={classes.input} fullWidth={true}>
+          <InputLabel htmlFor="username">UserName</InputLabel>
+          <Input
+            value={currentUser.username}
+            onChange={(e) => currentUser.setUsername(e.target.value)}
+            type="text"
+          />
+        </FormControl>
+        <PasswordInput
+          value={currentUser.password}
+          onChange={(e) => currentUser.setPassword(e.target.value)}
+          label="Password"
+        />
+        <br />
+        <Button
+          disabled={currentUser.loginValidatie === false}
+          variant="raised"
+          size="large"
+          color="primary"
+          fullWidth={true}
+          onClick={(e) => login()}
+        >
+          Login
+        </Button>
+      </div>
+    );
 const enhance = compose<LoginFormInternalProps, LoginFormExternalProps>(
   withStyles(styles),
   withHandlers<LoginFormInternalProps, {}>({
-    login: ({ currentUser, onLogin}) => () => {
+    login: ({ currentUser, onLogin }) => () => {
       if (currentUser.login() && onLogin) {
         onLogin();
-      } 
+      }
     }
   }),
   observer

@@ -53,7 +53,7 @@ const PaswordInputComponent = ({ label,
   );
 const enhance = compose<PaswordInputInternalProps, PaswordInputExternalProps>(
   withState('showPassword', 'setShowPassword', false),
-  withStyles(styles)
+  withStyles(styles),
 );
 
 export const PasswordInput = enhance(PaswordInputComponent);

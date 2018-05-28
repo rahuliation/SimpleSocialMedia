@@ -11,6 +11,10 @@ export const Apis = {
     LOGIN: {
         url: baseUrl + apiRoute + '/users/gettoken',
         method: 'post',
+    },
+    GETPROFILE: {
+        url: baseUrl + apiRoute + '/users/getprofile',
+        method: 'get',
     }
 
 };

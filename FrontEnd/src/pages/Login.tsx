@@ -8,7 +8,6 @@ import { Tabs, Tab } from '@material-ui/core';
 import { RegistrationForm } from 'components/Login/Registration';
 import { inject, observer } from 'mobx-react';
 import { Store } from 'models/Store';
-import { Redirect } from 'react-router';
 
 const styles: StyleRulesCallback = (theme: any) => ({
   root: {
@@ -34,15 +33,6 @@ interface LoginPageInternalProps {
 const LoginComponent = ({ classes, store,
   loginTab, setLoginTab,
   message, setMessage }: LoginPageInternalProps) =>
-  store.userStore.currentUser.authenticated === true ?
-    (
-      <Redirect
-        to={{
-          pathname: '/home',
-        }}
-      />
-    )
-    :
     (
       <Grid container={true} className={classes.root}>
         <Grid item={true} md={12} >
@@ -80,13 +70,14 @@ const LoginComponent = ({ classes, store,
         </Grid>
       </Grid>
     );
+    
 const enhance = compose<LoginPageInternalProps, {}>(
   inject('store'),
   observer,
   withState('message', 'setMessage', ''),
   withState('loginTab', 'setLoginTab', 0),
   withStyles(styles),
-  observer,
+  observer
 );
 
 export const Login = enhance(LoginComponent);

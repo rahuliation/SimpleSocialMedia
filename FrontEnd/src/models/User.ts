@@ -11,7 +11,7 @@ export const User = types.model('users', {
     username: types.optional(types.string, ''),
     email: types.optional(types.string, ''),
     image: types.optional(types.string, ''),
-    access_token: types.maybe(types.string)
+    accessToken: types.maybe(types.string)
 }).volatile((self): {
     password: null | string,
     repeatPassword: null | string,
@@ -20,12 +20,12 @@ export const User = types.model('users', {
     password: null,
     repeatPassword: null,
     base64Image: null
-} )).views((self) => ({
+})).views((self) => ({
     get authenticated() {
-       if ( isEmpty(self.access_token)) {
-           return false;
-       }
-       return true;
+        if (isEmpty(self.accessToken)) {
+            return false;
+        }
+        return true;
     },
     get CreateValidate() {
         return isEmpty(self.name) === false
@@ -55,7 +55,7 @@ export const User = types.model('users', {
         self.name = name;
     },
     setToken(token: string) {
-        self.access_token = token;
+        self.accessToken = token;
     },
     setPassword(password: string) {
         self.password = password;
@@ -70,14 +70,14 @@ export const User = types.model('users', {
         self.username = username.toLowerCase().replace(/\s/g, '');
     }
 })).actions((self) => {
-    const setBase64Image = flow(function * (image: any) {
-            self.base64Image = yield fileToBase64(image[0]);
-     });
-     const login = flow(function* () {
-         if (self.loginValidatie === false) {
+    const setBase64Image = flow(function* (image: any) {
+        self.base64Image = yield fileToBase64(image[0]);
+    });
+    const login = flow(function* () {
+        if (self.loginValidatie === false) {
             return false;
-         }
-         try {
+        }
+        try {
             var res = yield axios({
                 method: Apis.LOGIN.method,
                 url: Apis.LOGIN.url,
@@ -92,12 +92,20 @@ export const User = types.model('users', {
         }
         if (res.status && res.status !== 200) {
             return false;
-          }
-          if (res.data.token) {
+        }
+        if (res.data.token) {
+            axios.defaults.headers.common = {
+                _token: res.data.token,
+            };
             localStorage.setItem('token', res.data.token);
-            self.setToken(res.data.token);
-          }
-     });
+
+            applySnapshot(self, {
+                ...res.data,
+                accessToken: res.data.token
+            });
+
+        }
+    });
     const save = flow(function* () {
         if (self._id === null && self.CreateValidate === false) {
             return false;
@@ -120,17 +128,42 @@ export const User = types.model('users', {
             console.log(e);
         }
         if (res.status && res.status !== 200) {
-          return false;
+            return false;
         }
         self.reset();
         applySnapshot(self, res.data);
-       
+
         return true;
     });
-    function afterCreate() {
-      let token = localStorage.getItem('token');
-      self.access_token = token;
-    }
+    const afterCreate = flow(function* () {
+        var token = localStorage.getItem('token');
+        axios.defaults.headers.common = {
+            '_token': token,
+        };
+        self.accessToken = token;
+
+        try {
+            var res = yield axios({
+                method: Apis.GETPROFILE.method,
+                url: Apis.GETPROFILE.url
+            });
+        } catch (e) {
+            // tslint:disable-next-line:no-console
+            console.log(e);
+        }
+        if (res.status && res.status !== 200) {
+            axios.defaults.headers.common = {
+                '_token': null,
+            };
+            self.accessToken = null;
+            return false;
+        }
+        applySnapshot(self, {
+            ...res.data,
+            accessToken: token
+        });
+
+    });
     return { save, setBase64Image, login, afterCreate };
 });
 
