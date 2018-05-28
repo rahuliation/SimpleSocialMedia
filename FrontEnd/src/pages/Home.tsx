@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { compose } from 'recompose';
 import { inject } from 'mobx-react';
 import { Store } from 'models/Store';
+import { Redirect } from 'react-router-dom';
 
 const styles: StyleRulesCallback = (theme: any) => ({
   root: {
@@ -24,13 +25,23 @@ interface HomePageInternalProps {
   setLoginTab: (loginTab: number) => void;
 }
 
-const HomeComponent = ({ classes, store , loginTab, setLoginTab }: HomePageInternalProps) => (
-  <Grid container={true} className={classes.root}>
-    <Grid item={true} md={12} >
-        Home
+const HomeComponent = ({ classes, store, loginTab, setLoginTab }: HomePageInternalProps) =>
+  store.userStore.currentUser.authenticated === false ?
+    (
+      <Redirect
+        to={{
+          pathname: '/',
+        }}
+      />
+    )
+    :
+    (
+      <Grid container={true} className={classes.root}>
+        <Grid item={true} md={12} >
+          Home
     </Grid>
-  </Grid>
-);
+      </Grid>
+    );
 const enhance = compose<HomePageInternalProps, {}>(
   inject('store'),
   withStyles(styles)

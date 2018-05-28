@@ -93,8 +93,10 @@ export const User = types.model('users', {
         if (res.status && res.status !== 200) {
             return false;
           }
-        self.setToken(res.data.token);
-
+          if (res.data.token) {
+            localStorage.setItem('token', res.data.token);
+            self.setToken(res.data.token);
+          }
      });
     const save = flow(function* () {
         if (self._id === null && self.CreateValidate === false) {
@@ -125,7 +127,11 @@ export const User = types.model('users', {
        
         return true;
     });
-    return { save, setBase64Image, login };
+    function afterCreate() {
+      let token = localStorage.getItem('token');
+      self.access_token = token;
+    }
+    return { save, setBase64Image, login, afterCreate };
 });
 
 export const UserStore = types.model('users', {

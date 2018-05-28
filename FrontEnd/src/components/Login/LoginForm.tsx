@@ -22,9 +22,11 @@ interface LoginFormInternalProps extends LoginFormExternalProps {
   classes: any;
   showPassword: boolean;
   setShowPassword: (showPassword: boolean) => void;
+  location: any;
 }
 
-const LoginFormComponent = ({ classes, currentUser, showPassword, setShowPassword, login }: LoginFormInternalProps) => 
+const LoginFormComponent = ({ classes, currentUser, showPassword, 
+  setShowPassword, login, location }: LoginFormInternalProps) => 
 (
   <div>
     <FormControl className={classes.input} fullWidth={true}>

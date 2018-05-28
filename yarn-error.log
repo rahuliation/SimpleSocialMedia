@@ -1,14 +1,14 @@
 Arguments: 
-  /home/rahul/.nvm/versions/node/v9.3.0/bin/node /home/rahul/.nvm/versions/node/v9.3.0/bin/yarn start
+  /home/rahul/.nvm/versions/node/v9.7.1/bin/node /home/rahul/.nvm/versions/node/v9.7.1/bin/yarn start
 
 PATH: 
-  /home/rahul/.nvm/versions/node/v9.3.0/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/sbin:/usr/sbin:/home/rahul/.config/composer/vendor/bin
+  /home/rahul/.nvm/versions/node/v9.7.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games:/sbin:/usr/sbin
 
 Yarn version: 
   1.5.1
 
 Node version: 
-  9.3.0
+  9.7.1
 
 Platform: 
   linux x64
@@ -23,10 +23,10 @@ Lockfile:
   No lockfile
 
 Trace: 
-  Error: Couldn't find a package.json file in "/home/rahul/PhpstormProjects/SimpleSocial"
-      at new MessageError (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:186:110)
-      at /home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:40048:15
+  Error: Couldn't find a package.json file in "/home/rahul/Desktop/New Folder/SimpleSocialMedia"
+      at new MessageError (/home/rahul/.nvm/versions/node/v9.7.1/lib/node_modules/yarn/lib/cli.js:186:110)
+      at /home/rahul/.nvm/versions/node/v9.7.1/lib/node_modules/yarn/lib/cli.js:40048:15
       at Generator.next (<anonymous>)
-      at step (/home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:98:30)
-      at /home/rahul/.nvm/versions/node/v9.3.0/lib/node_modules/yarn/lib/cli.js:109:13
+      at step (/home/rahul/.nvm/versions/node/v9.7.1/lib/node_modules/yarn/lib/cli.js:98:30)
+      at /home/rahul/.nvm/versions/node/v9.7.1/lib/node_modules/yarn/lib/cli.js:109:13
       at <anonymous>

@@ -44,8 +44,8 @@ const App = () => (
   <Router>
     <div>
       <CssBaseline />
-      <Route exact={true} path="/" MyComponent={Login} />
-      <Route exact={true}  path="/home" MyComponent={Home} />
+      <Route exact={true}  path="/" component={Login} />
+      <Route exact={true}    path="/home" component={Home} />
 
     </div>
   </Router>

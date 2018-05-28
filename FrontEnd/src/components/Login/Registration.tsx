@@ -36,7 +36,7 @@ const RegistrationFormComponent = ({ classes, currentUser, save }: RegistrationF
   <div>
     <br />
     <Avatar
-      alt="Adelle Charles"
+      alt="No Photo"
       src={currentUser.base64Image ? currentUser.base64Image : `${Apis.BASE_URL}/storage/noprofile.jpeg`}
       className={classes.bigAvatar}
     />
