@@ -79,13 +79,13 @@ paths:
         200:
           description: Returns all examples
 
-  /users/{id}:
+  /users/getprofile:
     get:
       tags:
         - Users
       parameters:
-        - name: id
-          in: path
+        - name: _token
+          in: header
           required: true
           description: The id of the entity to retrieve
           type: string

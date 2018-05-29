@@ -10,6 +10,7 @@
     "test": "node build.js && mocha test/**/*.ts --exit"
   },
   "dependencies": {
+    "@types/socket.io": "^1.4.33",
     "base64-img": "^1.0.4",
     "bcrypt": "^2.0.1",
     "bluebird": "^3.5.0",
@@ -20,6 +21,7 @@
     "jsonwebtoken": "^8.2.1",
     "mongoose": "^5.1.2",
     "pino": "^4.7.3",
+    "socket.io": "^2.1.1",
     "source-map-support": "^0.4.15",
     "swagger-express-middleware": "^1.0.0-alpha.12"
   },
