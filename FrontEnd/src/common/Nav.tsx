@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { withStyles, StyleRulesCallback } from '@material-ui/core/styles';
 import { compose, withState } from 'recompose';
-import { IconButton, AppBar, Toolbar, Typography, Menu, MenuItem, Avatar } from '@material-ui/core';
+import { IconButton, AppBar, Toolbar, Typography, Avatar } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
-import { inject } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import { Store } from 'models/Store';
+import { Apis } from 'Apis';
 
 const styles: StyleRulesCallback = (theme: any) => ({
   root: {
@@ -14,8 +15,8 @@ const styles: StyleRulesCallback = (theme: any) => ({
     flex: 1,
   },
   menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
+    marginLeft: '5px',
+    marginRight: '40px',
   },
 });
 interface NavExternalProps {
@@ -44,36 +45,28 @@ const NavComponent = ({
             <Typography variant="title" color="inherit">
               Simple Social
             </Typography>
-            <Avatar
-              alt="Adelle Charles"
-              src={store.userStore.currentUser.image}
-            />
+
           </div>
           <div>
+          {store.userStore.currentUser.name}
+
             <IconButton
               aria-owns={openMenu ? 'menu-appbar' : undefined}
               aria-haspopup="true"
+              className={classes.menuButton}
               onClick={(e) => setOpenMenu(!openMenu)}
               color="inherit"
             >
-              <AccountCircle />
+              {store.userStore.currentUser.image ?
+                <Avatar
+                  alt={store.userStore.currentUser.name}
+                  src={`${Apis.BASE_URL}${store.userStore.currentUser.image}`}
+                />
+                :
+                <AccountCircle /> 
+              }
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={openMenu}
-              onClose={() => setOpenMenu(!openMenu)}
-            >
-              <MenuItem >Profile</MenuItem>
-              <MenuItem >Logout</MenuItem>
-            </Menu>
+           
           </div>
         </Toolbar>
       </AppBar>
@@ -82,7 +75,8 @@ const NavComponent = ({
 const enhance = compose<NavInternalProps, NavExternalProps>(
   inject('store'),
   withState('openMenu', 'setOpenMenu', false),
-  withStyles(styles)
+  withStyles(styles),
+  observer
 );
 
 export const Nav = enhance(NavComponent);

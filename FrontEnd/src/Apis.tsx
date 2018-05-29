@@ -12,6 +12,10 @@ export const Apis = {
         url: baseUrl + apiRoute + '/users/gettoken',
         method: 'post',
     },
+    USERLIST: {
+        url: baseUrl + apiRoute + '/users',
+        method: 'get',
+    },
     GETPROFILE: {
         url: baseUrl + apiRoute + '/users/getprofile',
         method: 'get',
