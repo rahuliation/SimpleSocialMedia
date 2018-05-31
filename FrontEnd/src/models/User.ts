@@ -75,7 +75,7 @@ export const User = types.model('users', {
     setUsername(username: string) {
         self.username = username.toLowerCase().replace(/\s/g, '');
     },
-    setAccessToken(token: string |null) {
+    setAccessToken(token: string | null) {
         self.accessToken = token;
     }
 })).actions((self) => {
@@ -117,6 +117,12 @@ export const User = types.model('users', {
         socket.emit('getProfile', getSnapshot(self));
 
     });
+
+    const logout = function () {
+        self.accessToken = null;
+        localStorage.removeItem('token');
+    };
+
     const save = flow(function* () {
         if (self._id === null && self.CreateValidate === false) {
             return false;
@@ -147,18 +153,18 @@ export const User = types.model('users', {
         }
 
     });
-    
-    return { save, setBase64Image, login };
+
+    return { save, logout, setBase64Image, login };
 });
 
 export const UserStore = types.model('users', {
     userList: types.optional(types.array(User), []),
     currentUser: types.optional(User, {})
 
-}).actions( (self) => {
+}).actions((self) => {
 
     const loadlist = flow(function* () {
-        
+        self.userList.clear() ;
         try {
             var res = yield axios({
                 method: Apis.USERLIST.method,
@@ -169,25 +175,25 @@ export const UserStore = types.model('users', {
             }
             const users: typeof User.SnapshotType[] = res.data;
             users.map(user =>
-                isEqual(self.currentUser._id , user._id) ?
-                undefined :  self.userList.push (User.create(user)) 
+                isEqual(self.currentUser._id, user._id) ?
+                    undefined : self.userList.push(User.create(user))
             );
             socket.on('online', (data: typeof User.SnapshotType[]) => {
                 self.userList.map((user, key) => {
-                    data.findIndex(onlineUser => isEqual(onlineUser._id, user._id) ) !== -1 ?
+                    data.findIndex(onlineUser => isEqual(onlineUser._id, user._id)) !== -1 ?
                         self.userList[key].setOnline(true) : self.userList[key].setOnline(false);
-                    
+
                 });
             });
         } catch (e) {
             // tslint:disable-next-line:no-console
             console.log(e);
         }
-        
+
     });
     const afterCreate = flow(function* () {
         var token = localStorage.getItem('token');
-        if (!token) { 
+        if (!token) {
             return false;
         }
         axios.defaults.headers.common = {
@@ -211,11 +217,15 @@ export const UserStore = types.model('users', {
                 ...res.data,
                 accessToken: token
             });
-            socket.on('reconnect', function() {
+            let index = self.userList.findIndex(user => isEqual(user._id, self.currentUser._id));
+            if (index !== -1) {
+                self.userList.splice(index, 1);
+            }
+            socket.on('reconnect', function () {
                 socket.emit('getProfile', getSnapshot(self.currentUser));
             });
             socket.emit('getProfile', getSnapshot(self.currentUser));
-        
+
         } catch (e) {
             // tslint:disable-next-line:no-console
             console.log(e);

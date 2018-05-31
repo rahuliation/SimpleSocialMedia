@@ -1,5 +1,5 @@
 
-const baseUrl: string = 'http://localhost:4000';
+const baseUrl: string = 'http://paykari.com:4000';
 const apiRoute: string = '/api/v1';
 
 export const Apis = {
