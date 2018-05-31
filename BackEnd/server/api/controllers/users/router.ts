@@ -4,6 +4,6 @@ import controller from './controller'
 
 export default express.Router()
     .post('/', controller.create)
-    .get('/', controller.all)
+    .get('/',athenticate, controller.all)
     .get('/getprofile', athenticate, controller.getProfile)
     .post('/gettoken', controller.getToken);

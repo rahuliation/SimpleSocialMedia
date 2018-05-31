@@ -20,6 +20,9 @@ export class UserService {
       
     return new Promise(async (resolve, reject) => {
       let user = await User.findOne({ username }).exec();
+      if(!user) {
+        reject('username not found')
+      }
       user.comparePassword(password, (err, isMatch) => {
         if (isMatch === true) {
           let token = jwt.sign({
@@ -71,11 +74,17 @@ export class UserService {
         if (result) {
           throw 'Username Already Exist'
         }
-        return fileUpload(image, '/storage', username)
+        if(image){
+          return fileUpload(image, '/storage', username);
+        }
+        else {
+          Promise.resolve(null);
+        }
+        
       })
-      .then((path: string) => {
+      .then((path: string | null) => {
 
-        return new User({ name, username, email, password, image: path.replace('public', '') }).save()
+        return new User({ name, username, email, password, image: path? path.replace('public', '') : '' }).save()
       });
   }
 }

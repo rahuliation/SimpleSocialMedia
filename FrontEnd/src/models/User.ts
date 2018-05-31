@@ -50,7 +50,6 @@ export const User = types.model('users', {
     }
 })).actions((self) => ({
     reset() {
-        self.password = null;
         self.base64Image = null;
         self.repeatPassword = null;
     },
@@ -136,7 +135,7 @@ export const User = types.model('users', {
                 url: Apis.SIGNUP.url,
                 data: {
                     ...pick(getSnapshot(self), ['name', 'username', 'email']),
-                    image: self.base64Image,
+                    image: isEmpty(self.base64Image ) === false ? self.base64Image : undefined,
                     password: self.password
                 }
             });
