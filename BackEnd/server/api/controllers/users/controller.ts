@@ -12,7 +12,7 @@ export class Controller {
       .status(200)
       .json(r.map(( val) =>({
         ...pick(val,[
-          'id',
+          '_id',
           'name',
           'username',
           'email',

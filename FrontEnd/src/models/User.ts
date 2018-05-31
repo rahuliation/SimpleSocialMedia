@@ -168,17 +168,15 @@ export const UserStore = types.model('users', {
                 return false;
             }
             const users: typeof User.SnapshotType[] = res.data;
-            users.map(user => 
-                self.userList.push (User.create(user))
+            users.map(user =>
+                isEqual(self.currentUser._id , user._id) ?
+                undefined :  self.userList.push (User.create(user)) 
             );
-            socket.on('online', function(data: any) {
-                
-                // tslint:disable-next-line:no-console
-                console.log(data);
+            socket.on('online', (data: typeof User.SnapshotType[]) => {
                 self.userList.map((user, key) => {
-                    if (isEqual(user._id, data._id)) {
-                        self.userList[key].setOnline(true);
-                    }
+                    data.findIndex(onlineUser => isEqual(onlineUser._id, user._id) ) !== -1 ?
+                        self.userList[key].setOnline(true) : self.userList[key].setOnline(false);
+                    
                 });
             });
         } catch (e) {
@@ -212,6 +210,9 @@ export const UserStore = types.model('users', {
             applySnapshot(self.currentUser, {
                 ...res.data,
                 accessToken: token
+            });
+            socket.on('reconnect', function() {
+                socket.emit('getProfile', getSnapshot(self.currentUser));
             });
             socket.emit('getProfile', getSnapshot(self.currentUser));
         

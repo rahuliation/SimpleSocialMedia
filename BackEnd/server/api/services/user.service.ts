@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import * as  jwt from 'jsonwebtoken';
 import { User, UserModelI } from './../db/user';
 import L from '../../common/logger';
@@ -12,8 +13,11 @@ export class UserService {
     return User.findById(id).exec();
   }
 
-  getToken(username: string, password: string, longlive?: boolean): Promise<{ token: string , username: string, name: string , email:string , image: string}> {
-
+  getToken(username: string, 
+    password: string, longlive?: boolean): Promise<{ _id: string, 
+    token: string, username: string, 
+    name: string, email: string, image: string }> {
+      
     return new Promise(async (resolve, reject) => {
       let user = await User.findOne({ username }).exec();
       user.comparePassword(password, (err, isMatch) => {
@@ -22,12 +26,17 @@ export class UserService {
             username: username,
             alive: longlive ? Math.floor(Date.now() / 1000) + 86400 : Math.floor(Date.now() / 1000) + 8640000
           }, process.env.TOKEN_SECRET);
-          resolve({  token , name: 
-            user.name, 
-            username: user.username,
-            email: user.email,
-            image: user.image
-           })
+          resolve({
+            token,
+            ...pick(user, [
+              '_id',
+              'name',
+              'username',
+              'email',
+              'image'
+            ])
+
+          })
         } else {
           reject('Password Didnt match')
         }
@@ -36,19 +45,19 @@ export class UserService {
   }
 
   getProfile(token): Promise<UserModelI> | any {
-   return  new Promise(function (resolve, reject) {
-      jwt.verify(token,  process.env.TOKEN_SECRET, async function(err, decoded) {
-          if(err) return reject(err);
-          if(decoded.username){
-            try{
-              let user = await User.findOne({ 'username': decoded.username });
-              return resolve(user);
+    return new Promise(function (resolve, reject) {
+      jwt.verify(token, process.env.TOKEN_SECRET, async function (err, decoded) {
+        if (err) return reject(err);
+        if (decoded.username) {
+          try {
+            let user = await User.findOne({ 'username': decoded.username });
+            return resolve(user);
 
-            } catch (e){
-              return reject(e);
-            }
+          } catch (e) {
+            return reject(e);
           }
-          
+        }
+
 
       });
     })
@@ -66,7 +75,7 @@ export class UserService {
       })
       .then((path: string) => {
 
-        return new User({ name, username, email, password, image: path.replace('public', '')}).save()
+        return new User({ name, username, email, password, image: path.replace('public', '') }).save()
       });
   }
 }
